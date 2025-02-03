@@ -14,32 +14,46 @@ export const LabLine = ({ lineNumber }: LabLineProps) => {
 
   const handleMessage = useCallback((data: SwitchStatus) => {
     try {
+      console.group(`[Line${lineNumber}] Processing message`);
+      console.log('Received data:', data);
+
       // Check if we have a valid device_name
       if (!data.device_name) {
+        console.log('No device_name in message');
+        console.groupEnd();
         return;
       }
 
       // Parse the device name (e.g., "L15R7_B1")
       const deviceName = data.device_name.toLowerCase(); // Keep lowercase for consistency
+      console.log('Device name:', deviceName);
       
-      // Extract the line and room numbers
-      const match = deviceName.match(/l(\d+)r(\d+)/i);
+      // Extract the line and room numbers, ignoring the _B1 suffix
+      const match = deviceName.match(/l(\d+)r(\d+)(?:_b1)?/i);
       if (!match) {
+        console.log('Invalid device name format');
+        console.groupEnd();
         return;
       }
 
       const [, msgLineNumber, roomNumber] = match;
+      console.log('Parsed line:', msgLineNumber, 'room:', roomNumber);
       
       // Check if this message is for this line
       if (parseInt(msgLineNumber) !== lineNumber) {
+        console.log('Message is for different line');
+        console.groupEnd();
         return;
       }
 
       // Get the status using the exact key from the message
       const status = data[deviceName]?.toLowerCase();
       const roomId = `L${msgLineNumber}R${roomNumber}`;
+      console.log('Status:', status, 'for room:', roomId);
 
       if (!status) {
+        console.log('No status found');
+        console.groupEnd();
         return;
       }
 
@@ -47,15 +61,20 @@ export const LabLine = ({ lineNumber }: LabLineProps) => {
       setActiveStations(prev => {
         const next = new Set(prev);
         if (status === 'on') {
+          console.log('Adding room to active stations:', roomId);
           next.add(roomId);
         } else if (status === 'off') {
+          console.log('Removing room from active stations:', roomId);
           next.delete(roomId);
         }
+        console.log('New active stations:', Array.from(next));
         return next;
       });
+      console.groupEnd();
 
     } catch (error) {
       console.error('Error processing message:', error);
+      console.groupEnd();
     }
   }, [lineNumber]);
 

@@ -1,20 +1,24 @@
-import './App.css'
-import { LabLine } from './components/LabLine'
-import { DebugPanel } from './components/DebugPanel'
-import './styles/lab.css'
-import { ErrorBoundary } from './components/ErrorBoundary'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Navigation } from './components/Navigation';
+import { DashboardPage } from './pages/DashboardPage';
+import { DebugPage } from './pages/DebugPage';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import './App.css';
+import './styles/lab.css';
 
 export default function App() {
   return (
     <ErrorBoundary>
-      <div className="app">
-        <h1 className="app-title">Smart Light Dashboard</h1>
-        <div className="labs-wrapper">
-          <LabLine lineNumber={15} />
-          <LabLine lineNumber={16} />
+      <Router>
+        <div className="app">
+          <Navigation />
+          <h1 className="app-title">Traffic Light Dashboard</h1>
+          <Routes>
+            <Route path="/" element={<DashboardPage />} />
+            <Route path="/debug" element={<DebugPage />} />
+          </Routes>
         </div>
-        <DebugPanel />
-      </div>
+      </Router>
     </ErrorBoundary>
   );
 }

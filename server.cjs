@@ -5,7 +5,7 @@ const os = require('os');
 const app = express();
 const port = 3000;
 const ip = '0.0.0.0'; // Listen on all network interfaces
-
+ 
 // Serve static files from the dist directory
 app.use(express.static(path.join(__dirname, 'dist')));
 

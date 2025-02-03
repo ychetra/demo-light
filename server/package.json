@@ -1,0 +1,15 @@
+{
+  "name": "traffic-light-server",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "powershell -File .\\start-server.ps1",
+    "dev": "node --watch start.js"
+  },
+  "dependencies": {
+    "mqtt": "^5.10.3",
+    "mysql2": "^3.12.0",
+    "traffic-light-server": "file:",
+    "ws": "^8.18.0"
+  }
+}
