@@ -15,6 +15,13 @@ export default defineConfig({
     }
   },
   server: {
-    cors: true
+    cors: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        secure: false
+      },
+    }
   }
 });

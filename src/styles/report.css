@@ -1,0 +1,164 @@
+.report-page {
+  width: 100%;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.report-title {
+  color: #e5e7eb;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.report-container {
+  background-color: #2a2a2a;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 800px;
+}
+
+.calendar {
+  width: 100%;
+}
+
+.calendar-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.calendar-day-header {
+  text-align: center;
+  padding: 8px;
+  font-weight: 600;
+  color: #9ca3af;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  padding: 8px;
+  border: 1px solid #374151;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.calendar-day.empty {
+  background-color: transparent;
+  border: none;
+}
+
+.calendar-day.has-activity {
+  background-color: #374151;
+  border-color: #4b5563;
+}
+
+.calendar-day .date {
+  font-size: 0.9rem;
+  color: #e5e7eb;
+}
+
+.calendar-day .count {
+  font-size: 0.8rem;
+  color: #60a5fa;
+  margin-top: 4px;
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #e5e7eb;
+}
+
+.report-table th,
+.report-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #4b5563;
+}
+
+.report-table th {
+  background-color: #374151;
+  font-weight: 600;
+}
+
+.report-table tr:hover {
+  background-color: #374151;
+}
+
+.no-data {
+  text-align: center;
+  color: #9ca3af;
+  padding: 2rem !important;
+}
+
+.loading,
+.error {
+  color: #e5e7eb;
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.1rem;
+}
+
+.error {
+  color: #ef4444;
+}
+
+.retry-button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #374151;
+  border: 1px solid #4b5563;
+  border-radius: 4px;
+  color: #e5e7eb;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.retry-button:hover {
+  background-color: #4b5563;
+}
+
+.error-container {
+  text-align: center;
+  padding: 2rem;
+}
+
+.error {
+  color: #ef4444;
+  margin-bottom: 1rem;
+}
+
+.retry-button {
+  padding: 0.5rem 1rem;
+  background-color: #374151;
+  border: 1px solid #4b5563;
+  border-radius: 4px;
+  color: #e5e7eb;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.retry-button:hover {
+  background-color: #4b5563;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #9ca3af;
+} 

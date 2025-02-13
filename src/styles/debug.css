@@ -1,0 +1,62 @@
+.debug-page {
+  padding: 2rem;
+  color: #e5e7eb;
+}
+
+.debug-container {
+  background-color: #2a2a2a;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-top: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.message-list {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.debug-message {
+  display: grid;
+  grid-template-columns: auto 150px 100px;
+  gap: 1rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid #4b5563;
+}
+
+.debug-message:hover {
+  background-color: #374151;
+}
+
+.timestamp {
+  color: #9ca3af;
+  font-family: monospace;
+}
+
+.device {
+  color: #60a5fa;
+}
+
+.status {
+  color: #34d399;
+}
+
+.debug-loading, .debug-error, .no-messages {
+  text-align: center;
+  padding: 2rem;
+  color: #9ca3af;
+}
+
+.debug-error {
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.error-details {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #9ca3af;
+} 

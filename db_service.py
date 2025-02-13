@@ -4,7 +4,7 @@ from mysql.connector import Error
 class DatabaseService:
     def __init__(self):
         self.config = {
-            'host': '192.167.7.130',
+            'host': '192.167.14.207',
             'user': 'root',
             'password': 'ymswitch',
             'database': 'smart_light',

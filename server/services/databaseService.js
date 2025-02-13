@@ -14,31 +14,29 @@ class DatabaseService {
     if (this.pool) return;
 
     try {
-      this.pool = mysql.createPool({
+      console.log('Creating database pool with config:', {
+        host: config.database.host,
+        user: config.database.user,
+        database: config.database.database,
+        port: config.database.port
+      });
+
+      this.pool = await mysql.createPool({
         ...config.database,
         waitForConnections: true,
-        connectionLimit: 10,
-        queueLimit: 0,
-        connectTimeout: 10000,
-        enableKeepAlive: true,
-        keepAliveInitialDelay: 0
+        connectionLimit: 10
       });
 
       // Test the connection
       const connection = await this.pool.getConnection();
-      console.log('✅ Successfully connected to MySQL database');
+      console.log('✅ Database connection successful');
       connection.release();
-    } catch (error) {
-      console.error(`❌ Failed to connect to MySQL: ${error.message}`);
-      this.pool = null;
       
-      if (this.retryCount < this.maxRetries) {
-        this.retryCount++;
-        console.log(`🔄 Retrying connection in ${this.retryDelay/1000} seconds... (Attempt ${this.retryCount}/${this.maxRetries})`);
-        setTimeout(() => this.createPool(), this.retryDelay);
-      } else {
-        console.error('❌ Max retry attempts reached. Please check database connection settings.');
-      }
+      return this.pool;
+    } catch (error) {
+      console.error('❌ Failed to create database pool:', error);
+      this.pool = null;
+      throw error;
     }
   }
 
@@ -123,6 +121,51 @@ class DatabaseService {
     } catch (error) {
       console.error('❌ Error fetching device history:', error.message);
       return [];
+    }
+  }
+
+  async getDailyUsageReports() {
+    try {
+      if (!this.pool) {
+        console.log('Creating new database pool...');
+        await this.createPool();
+      }
+
+      const connection = await this.pool.getConnection();
+      console.log('Got database connection');
+
+      try {
+        const query = `
+          SELECT 
+            DATE_FORMAT(timestamp, '%Y-%m-%d') as date,
+            COUNT(*) as count
+          FROM device_status 
+          WHERE timestamp >= DATE_SUB(CURRENT_DATE, INTERVAL 31 DAY)
+          GROUP BY DATE(timestamp)
+          ORDER BY date DESC
+        `;
+
+        console.log('Executing query:', query);
+        const [rows] = await connection.query(query);
+        console.log('Raw query results:', rows);
+
+        if (!Array.isArray(rows)) {
+          throw new Error('Database returned invalid format');
+        }
+
+        const formattedResults = rows.map(row => ({
+          date: row.date,
+          count: parseInt(row.count, 10)
+        }));
+
+        console.log('Formatted results:', formattedResults);
+        return formattedResults;
+      } finally {
+        connection.release();
+      }
+    } catch (error) {
+      console.error('Database error:', error);
+      throw error;
     }
   }
 }

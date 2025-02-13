@@ -1,4 +1,4 @@
-import { WebSocketServer } from 'ws';
+import WebSocket, { WebSocketServer } from 'ws';
 import { config } from '../config/config.js';
 import { dbService } from './databaseService.js';
 
@@ -10,7 +10,7 @@ class WebSocketService {
     this.checkAliveInterval = null;
   }
 
-  start() {
+  async start() {
     try {
       console.log('Initializing WebSocket server...');
       this.wss = new WebSocketServer({
@@ -132,18 +132,15 @@ class WebSocketService {
 
   formatDeviceStatus(status) {
     try {
-      // Ensure device_name exists and is a string
       if (!status?.device_name) {
         console.log('⚠️ Invalid status format:', status);
         return null;
       }
 
-      const deviceName = status.device_name;
-      // Create the message in the exact format the frontend expects
       const message = {
-        device_name: deviceName,
-        [deviceName.toLowerCase()]: status.status?.toLowerCase() || 'off',
-        time: status.timestamp || new Date().toISOString(),
+        device_name: status.device_name,
+        status: status[status.device_name.toLowerCase()] || 'off',
+        timestamp: new Date().toISOString(),
         source: 'database'
       };
 
@@ -197,28 +194,29 @@ class WebSocketService {
   }
 
   broadcast(message) {
-    try {
-      // Parse string messages
-      const messageToSend = typeof message === 'string' ? JSON.parse(message) : message;
-      
-      // Format the message
-      const formattedMessage = {
-        ...messageToSend,
-        [messageToSend.device_name]: messageToSend[messageToSend.device_name]?.toLowerCase() || 'off',
-        time: messageToSend.time || new Date().toISOString()
-      };
-      
-      console.log('📤 Broadcasting message:', formattedMessage);
-      
-      const messageStr = JSON.stringify(formattedMessage);
-      this.clients.forEach((client) => {
-        if (client.readyState === 1) { // OPEN
-          client.send(messageStr);
-        }
+    if (!this.wss) return;
+    
+    // Create a new date in UTC
+    const timestamp = new Date().toISOString();
+    
+    const messageWithTimestamp = {
+      ...message,
+      timestamp: timestamp
+    };
+    
+    const messageString = JSON.stringify(messageWithTimestamp);
+    this.clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(messageString);
+      }
+    });
+  }
+
+  stop() {
+    if (this.wss) {
+      this.wss.close(() => {
+        console.log('WebSocket server stopped');
       });
-      console.log(`📡 Broadcasted to ${this.clients.size} clients`);
-    } catch (error) {
-      console.error('❌ Error broadcasting message:', error);
     }
   }
 }

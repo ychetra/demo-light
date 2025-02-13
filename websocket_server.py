@@ -10,7 +10,7 @@ db_service = DatabaseService()
 connections = set()
 
 # MQTT settings
-MQTT_BROKER = "192.167.12.132"
+MQTT_BROKER = "192.167.14.207"
 MQTT_PORT = 1883
 MQTT_USERNAME = "mqtt"
 MQTT_PASSWORD = "mqtt"

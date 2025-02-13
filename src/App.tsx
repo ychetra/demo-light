@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Navigation } from './components/Navigation';
 import { DashboardPage } from './pages/DashboardPage';
+import { ReportPage } from './pages/ReportPage';
 import { DebugPage } from './pages/DebugPage';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import './App.css';
@@ -12,9 +13,13 @@ export default function App() {
       <Router>
         <div className="app">
           <Navigation />
-          <h1 className="app-title">Traffic Light Dashboard</h1>
           <Routes>
             <Route path="/" element={<DashboardPage />} />
+            <Route path="/report" element={
+              <ErrorBoundary>
+                <ReportPage />
+              </ErrorBoundary>
+            } />
             <Route path="/debug" element={<DebugPage />} />
           </Routes>
         </div>
